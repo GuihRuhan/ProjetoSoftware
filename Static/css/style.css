@@ -1,0 +1,169 @@
+/* Reset básico */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+body {
+    background: #f4fdfd;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Cabeçalho */
+header {
+    background: linear-gradient(90deg, #1d9bf0, #1ab394);
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-bottom: 4px solid #17a589;
+}
+
+header h1 {
+    font-size: 2rem;
+}
+
+/* Conteúdo principal */
+main {
+    display: flex;
+    justify-content: space-around;
+    padding: 30px;
+    flex-wrap: wrap;
+}
+
+/* Seções */
+section {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    width: 45%;
+    min-width: 320px;
+    margin-bottom: 20px;
+}
+
+h2 {
+    margin-bottom: 15px;
+    color: #1d9bf0;
+}
+
+/* Tabela */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 15px;
+}
+
+table th, table td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+table th {
+    background: #1d9bf0;
+    color: white;
+}
+
+table tr:nth-child(even) {
+    background: #f9f9f9;
+}
+
+/* Botões */
+.btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background: #1d9bf0;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: background 0.3s;
+    text-align: center;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background: #1178c2;
+}
+
+.btn.atender {
+    background: #1ab394;
+}
+
+.btn.atender:hover {
+    background: #148f77;
+}
+
+/* Formulário */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+form input, form select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    outline: none;
+    transition: 0.2s;
+}
+
+form input:focus, form select:focus {
+    border-color: #1d9bf0;
+    box-shadow: 0 0 5px rgba(29,155,240,0.4);
+}
+
+/* Estado vazio */
+.empty {
+    font-style: italic;
+    color: #777;
+    text-align: center;
+}
+
+/* === Carrossel === */
+.carousel-section {
+    margin-top: 40px;
+    text-align: center;
+}
+
+.carousel {
+    position: relative;
+    width: 80%;
+    margin: 20px auto;
+    overflow: hidden;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+}
+
+.carousel-track {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+}
+
+.carousel img {
+    width: 100%;
+    flex-shrink: 0;
+}
+
+.carousel-controls {
+    margin-top: 10px;
+}
+
+.carousel-controls button {
+    background: #005bc5;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    margin: 0 5px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s;
+}
+
+.carousel-controls button:hover {
+    background: #0040a0;
+}
