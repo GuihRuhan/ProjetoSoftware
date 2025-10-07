@@ -1,0 +1,13 @@
+/* Navegação */
+nav {
+    margin-top: 10px;
+}
+
+nav .btn {
+    margin: 5px;
+    background: #1d9bf0;
+}
+
+nav .btn:hover {
+    background: #1178c2;
+}
