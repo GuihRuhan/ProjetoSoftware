@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestão de Clientes</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/css/clientes.css') }}">
+
+
+</head>
+<body>
+    <header>
+        <h1>📋 Gestão de Clientes</h1>
+        <nav>
+            <a href="{{ url_for('index') }}" class="btn">🏥 Fila de Atendimento</a>
+            <a href="{{ url_for('lista_clientes') }}" class="btn">📋 Clientes</a>
+        </nav>
+    </header>
+
+    <main>
+        <section class="clientes">
+            <h2>Lista de Clientes</h2>
+            {% if clientes %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Código</th>
+                            <th>Nome</th>
+                            <th>Telefone</th>
+                            <th>Cidade</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cliente in clientes %}
+                        <tr>
+                            <td>{{ cliente.codigo }}</td>
+                            <td>{{ cliente.nome }}</td>
+                            <td>{{ cliente.telefone }}</td>
+                            <td>{{ cliente.cidade }}</td>
+                            <td>
+                                <a href="{{ url_for('deletar_cliente', codigo=cliente.codigo) }}" class="btn atender">Excluir</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            {% else %}
+                <p class="empty">Nenhum cliente cadastrado ainda.</p>
+            {% endif %}
+        </section>
+
+        <section class="formulario">
+            <h2>Adicionar Cliente</h2>
+            <form action="{{ url_for('adicionar_cliente') }}" method="POST">
+                <input type="text" name="codigo" placeholder="Código" required>
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="text" name="telefone" placeholder="Telefone">
+                <input type="text" name="cidade" placeholder="Cidade">
+                <button type="submit" class="btn">Adicionar</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

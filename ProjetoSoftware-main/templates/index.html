@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Fila de Atendimento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/css/clientes.css') }}">
+
+</head>
+<body>
+    <header>
+        <h1>🏥 Sistema de Atendimento</h1>
+    </header>
+
+    <main>
+        <section class="pacientes">
+            <h2>Fila de Pacientes</h2>
+            {% if pacientes %}
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Idade</th>
+                            <th>Urgência</th>
+                            <th>Convênio</th>
+                            <th>Hora</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for paciente in pacientes %}
+                        <tr>
+                            <td>{{ paciente['nome'] }}</td>
+                            <td>{{ paciente['idade'] }}</td>
+                            <td>{{ paciente['urgencia'] }}</td>
+                            <td>{{ paciente['convenio'] }}</td>
+                            <td>{{ paciente['hora'] }}</td>
+                        </tr>
+                        {% endfor %}
+
+                    </tbody>
+                </table>
+                <a href="{{ url_for('atender_paciente') }}" class="btn atender">Atender Próximo</a>
+            {% else %}
+                <p class="empty">Nenhum paciente na fila.</p>
+            {% endif %}
+        </section>
+
+        <section class="formulario">
+            <h2>Adicionar Paciente</h2>
+            <form action="{{ url_for('add_paciente') }}" method="POST">
+                <input type="text" name="nome" placeholder="Nome" required>
+                <input type="number" name="idade" placeholder="Idade" required>
+                <select name="urgencia" required>
+                    <option value="emergencia">Emergência</option>
+                    <option value="urgencia">Urgência</option>
+                    <option value="comum">Comum</option>
+                </select>
+                <select name="convenio" required>
+                    <option value="sim">Convênio</option>
+                    <option value="nao">Particular</option>
+                </select>
+                <button type="submit" class="btn">Adicionar</button>
+            </form>
+        </section>
+    </main>
+</body>
+</html>

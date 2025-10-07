@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Atendimento</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='static/css/clientes.css') }}">
+
+</head>
+<body>
+    <header>
+        <h1>🩺 Atendimento</h1>
+        <nav>
+            <a href="{{ url_for('index') }}" class="btn">🏥 Fila de Pacientes</a>
+            <a href="{{ url_for('lista_clientes') }}" class="btn">📋 Clientes</a>
+        </nav>
+    </header>
+
+    <main>
+        {% if paciente %}
+            <section class="atendimento">
+                <h2>Paciente em atendimento</h2>
+                <div class="card">
+                    <p><strong>Nome:</strong> {{ paciente.nome }}</p>
+                    <p><strong>Idade:</strong> {{ paciente.idade }}</p>
+                    <p><strong>Urgência:</strong> {{ paciente.urgencia|capitalize }}</p>
+                    <p><strong>Convênio:</strong> {{ "Sim" if paciente.convenio == "sim" else "Não" }}</p>
+                    <p><strong>Hora de Chegada:</strong> {{ paciente.hora }}</p>
+                </div>
+                <a href="{{ url_for('index') }}" class="btn atender">Finalizar Atendimento</a>
+            </section>
+        {% else %}
+            <section class="empty">
+                <h2>Nenhum paciente aguardando</h2>
+                <p>A fila está vazia. Retorne para a página inicial.</p>
+                <a href="{{ url_for('index') }}" class="btn">Voltar</a>
+            </section>
+        {% endif %}
+            <!-- Carrossel de imagens -->
+    <section class="carousel-section">
+        <h2>Momentos de Atendimento</h2>
+        <div class="carousel">
+            <div class="carousel-track">
+                <img src="{{ url_for('static', filename='img/Chat2.jpg') }}" alt="Consulta 1">
+                <img src="{{ url_for('static', filename='img/Chat1.jpg') }}" alt="Consulta 2">
+                <img src="{{ url_for('static', filename='img/perfil3.jpg') }}" alt="Consulta 3">
+            </div>
+        </div>
+        <div class="carousel-controls">
+            <button id="prev">⟨</button>
+            <button id="next">⟩</button>
+        </div>
+    </section>
+
+    </main>
+    <script src="{{ url_for('static', filename='static/js/script.js') }}"></script>
+
+</body>
+</html>
