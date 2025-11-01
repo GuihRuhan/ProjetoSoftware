@@ -1,103 +1,94 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
-import heapq
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "chave_super_secreta"
 
-# Banco de dados fake em memória (pode trocar por SQLite depois)
-clientes = []
+# Caminho do banco
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-# Lista de pacientes (usando heap para priorizar)
-pacientes = []
-contador = 0  # Para desempate (ordem de chegada)
+db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
+# ===== MODELOS =====
+class Cliente(db.Model):
+    codigo = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    nome = db.Column(db.String(100), nullable=False)
+    telefone = db.Column(db.String(20))
+    cidade = db.Column(db.String(50))
 
-# Função para definir prioridade
-def definir_prioridade(idade, urgencia, convenio):
-    if urgencia == "emergencia":
-        return 1
-    elif urgencia == "urgencia":
-        return 2
-    elif idade >= 60:
-        return 3
-    elif convenio == "sim":
-        return 4
-    else:
-        return 5
+class Paciente(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    nome = db.Column(db.String(100), nullable=False)
+    idade = db.Column(db.Integer, nullable=False)
+    urgencia = db.Column(db.String(20))
+    convenio = db.Column(db.String(10))
+    hora = db.Column(db.String(10), default=lambda: datetime.now().strftime("%H:%M"))
 
+# ===== ROTAS =====
 
-@app.route("/")
+@app.route('/')
 def index():
-    # Converte heap em lista ordenada (sem remover da heap)
-    fila_ordenada = sorted(pacientes, key=lambda x: (x[0], x[1]))
-    return render_template("index.html", pacientes=fila_ordenada)
+    pacientes = Paciente.query.all()
+    # return render_template('index.html', pacientes=enumerate(pacientes))
+    return render_template('index.html', pacientes=list(enumerate(pacientes)))
 
 
-@app.route("/add", methods=["POST"])
+@app.route('/add_paciente', methods=['POST'])
 def add_paciente():
-    global contador
-    nome = request.form["nome"]
-    idade = int(request.form["idade"])
-    urgencia = request.form["urgencia"]
-    convenio = request.form["convenio"]
+    nome = request.form['nome']
+    idade = request.form['idade']
+    urgencia = request.form['urgencia']
+    convenio = request.form['convenio']
+    novo = Paciente(nome=nome, idade=idade, urgencia=urgencia, convenio=convenio)
+    db.session.add(novo)
+    db.session.commit()
+    return redirect(url_for('index'))
 
-    prioridade = definir_prioridade(idade, urgencia, convenio)
-
-    # Adiciona na heap: (prioridade, ordem chegada, dados)
-    heapq.heappush(pacientes, (prioridade, contador, {
-        "nome": nome,
-        "idade": idade,
-        "urgencia": urgencia,
-        "convenio": convenio,
-        "hora": datetime.now().strftime("%H:%M:%S")
-    }))
-    contador += 1
-
-    flash(f"Paciente {nome} adicionado à fila!", "success")
-    return redirect(url_for("index"))
-
-
-@app.route("/atender")
+@app.route('/atender')
 def atender_paciente():
-    if pacientes:
-        paciente = heapq.heappop(pacientes)[2]  # Pega os dados do paciente
-        return render_template("atender.html", paciente=paciente)
-    return render_template("atender.html", paciente=None)
+    paciente = Paciente.query.first()
+    if paciente:
+        db.session.delete(paciente)
+        db.session.commit()
+        return render_template('atender.html', paciente=paciente)
+    else:
+        return render_template('atender.html', paciente=None)
 
-
-
-# Rotas de clientes
-@app.route("/clientes")
+# === CLIENTES ===
+@app.route('/clientes')
 def lista_clientes():
-    return render_template("clientes.html", clientes=clientes)
+    clientes = Cliente.query.all()
+    return render_template('clientes.html', clientes=clientes)
 
-
-@app.route("/adicionar", methods=["POST"])
+@app.route('/add_cliente', methods=['POST'])
 def adicionar_cliente():
-    codigo = request.form.get("codigo")
-    nome = request.form.get("nome")
-    telefone = request.form.get("telefone")
-    cidade = request.form.get("cidade")
+    codigo = request.form['codigo']
 
-    if not codigo or not nome:
-        flash("Código e Nome são obrigatórios!", "error")
-        return redirect(url_for("lista_clientes"))
+    if Cliente.query.filter_by(codigo=codigo).first():
+        flash("Código já existente! Escolha outro.")
+        return redirect('/clientes')
 
-    cliente = {"codigo": codigo, "nome": nome, "telefone": telefone, "cidade": cidade}
-    clientes.append(cliente)
+    nome = request.form['nome']
+    telefone = request.form['telefone']
+    cidade = request.form['cidade']
+    novo = Cliente(codigo=codigo, nome=nome, telefone=telefone, cidade=cidade)
+    db.session.add(novo)
+    db.session.commit()
+    return redirect(url_for('lista_clientes'))
 
-    flash("Cliente adicionado com sucesso!", "success")
-    return redirect(url_for("lista_clientes"))
 
-
-@app.route("/deletar/<codigo>")
+@app.route('/deletar/<int:codigo>')
 def deletar_cliente(codigo):
-    global clientes
-    clientes = [c for c in clientes if c["codigo"] != codigo]
-    flash("Cliente removido!", "info")
-    return redirect(url_for("lista_clientes"))
+    cliente = Cliente.query.get_or_404(codigo)
+    db.session.delete(cliente)
+    db.session.commit()
+    return redirect(url_for('lista_clientes'))
 
-
-if __name__ == "__main__":
+# ===== EXECUÇÃO =====
+if __name__ == '__main__':
+    with app.app_context():
+        db.create_all()
     app.run(debug=True)

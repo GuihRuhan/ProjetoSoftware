@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <title>Fila de Atendimento</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+
 </head>
 <body>
     <header>
@@ -27,11 +29,11 @@
                     <tbody>
                         {% for paciente in pacientes %}
                         <tr>
-                            <td>{{ paciente[2]['nome'] }}</td>
-                            <td>{{ paciente[2]['idade'] }}</td>
-                            <td>{{ paciente[2]['urgencia'] }}</td>
-                            <td>{{ paciente[2]['convenio'] }}</td>
-                            <td>{{ paciente[2]['hora'] }}</td>
+                            <td>{{ paciente[1]['nome'] }}</td>
+                            <td>{{ paciente[1]['idade'] }}</td>
+                            <td>{{ paciente[1]['urgencia'] }}</td>
+                            <td>{{ paciente[1]['convenio'] }}</td>
+                            <td>{{ paciente[1]['hora'] }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -60,5 +62,8 @@
             </form>
         </section>
     </main>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+
+
 </body>
 </html>
