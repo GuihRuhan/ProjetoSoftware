@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <title>Gestão de Clientes</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
 <body>
     <header>
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            <div class="flash-messages">
+              {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+              {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+
         <h1>📋 Gestão de Clientes</h1>
         <nav>
             <a href="{{ url_for('index') }}" class="btn">🏥 Fila de Atendimento</a>
@@ -51,9 +60,8 @@
         <section class="formulario">
             <h2>Adicionar Cliente</h2>
             <form action="{{ url_for('adicionar_cliente') }}" method="POST">
-                <input type="text" name="codigo" placeholder="Código" required>
                 <input type="text" name="nome" placeholder="Nome" required>
-                <input type="text" name="telefone" placeholder="Telefone">
+                <input type="text" name="telefone" placeholder="Telefone" required>
                 <input type="text" name="cidade" placeholder="Cidade">
                 <button type="submit" class="btn">Adicionar</button>
             </form>

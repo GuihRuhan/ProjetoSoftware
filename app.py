@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from sqlalchemy.exc import IntegrityError
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = "Projeto-integrador"
 
 # Caminho do banco
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
@@ -13,11 +15,19 @@ db = SQLAlchemy(app)
 migrate = Migrate(app, db)
 
 # ===== MODELOS =====
+# class Cliente(db.Model):
+#     codigo = db.Column(db.Integer, primary_key=True, autoincrement=True)
+#     nome = db.Column(db.String(100), nullable=False)
+#     telefone = db.Column(db.String(20))
+#     cidade = db.Column(db.String(50))
+
+# ===== MODELOS =====
 class Cliente(db.Model):
     codigo = db.Column(db.Integer, primary_key=True, autoincrement=True)
     nome = db.Column(db.String(100), nullable=False)
-    telefone = db.Column(db.String(20))
+    telefone = db.Column(db.String(20), unique=True)  # Telefones únicos!
     cidade = db.Column(db.String(50))
+
 
 class Paciente(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -65,19 +75,20 @@ def lista_clientes():
 
 @app.route('/add_cliente', methods=['POST'])
 def adicionar_cliente():
-    codigo = request.form['codigo']
-
-    if Cliente.query.filter_by(codigo=codigo).first():
-        flash("Código já existente! Escolha outro.")
-        return redirect('/clientes')
-
     nome = request.form['nome']
     telefone = request.form['telefone']
     cidade = request.form['cidade']
-    novo = Cliente(codigo=codigo, nome=nome, telefone=telefone, cidade=cidade)
+
+    # Opcional: verificar telefone único
+    if Cliente.query.filter_by(telefone=telefone).first():
+        flash("Telefone já cadastrado! Escolha outro.")
+        return redirect('/clientes')
+
+    novo = Cliente(nome=nome, telefone=telefone, cidade=cidade)
     db.session.add(novo)
     db.session.commit()
     return redirect(url_for('lista_clientes'))
+
 
 
 @app.route('/deletar/<int:codigo>')
