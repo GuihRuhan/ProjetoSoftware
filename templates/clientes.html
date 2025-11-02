@@ -61,6 +61,8 @@
             <h2>Adicionar Cliente</h2>
             <form action="{{ url_for('adicionar_cliente') }}" method="POST">
                 <input type="text" name="nome" placeholder="Nome" required>
+                <input type="text" name="rg" placeholder="RG">
+                <input type="text" name="cpf" placeholder="CPF">
                 <input type="text" name="telefone" placeholder="Telefone" required>
                 <input type="text" name="cidade" placeholder="Cidade">
                 <button type="submit" class="btn">Adicionar</button>

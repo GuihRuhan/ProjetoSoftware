@@ -49,6 +49,9 @@
             <form action="{{ url_for('add_paciente') }}" method="POST">
                 <input type="text" name="nome" placeholder="Nome" required>
                 <input type="number" name="idade" placeholder="Idade" required>
+                <input type="text" name="rg" placeholder="RG">
+                <input type="text" name="cpf" placeholder="CPF">
+
                 <select name="urgencia" required>
                     <option value="emergencia">Emergência</option>
                     <option value="urgencia">Urgência</option>
