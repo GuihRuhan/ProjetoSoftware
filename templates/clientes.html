@@ -20,7 +20,7 @@
         <h1>📋 Gestão de Clientes</h1>
         <nav>
             <a href="{{ url_for('index') }}" class="btn">🏥 Fila de Atendimento</a>
-            <a href="{{ url_for('lista_clientes') }}" class="btn">📋 Clientes</a>
+            <a href="{{ url_for('clientes') }}" class="btn">📋 Clientes</a>
         </nav>
     </header>
 
@@ -41,13 +41,11 @@
                     <tbody>
                         {% for cliente in clientes %}
                         <tr>
-                            <td>{{ cliente.codigo }}</td>
+                            <td>{{ cliente.id }}</td>
                             <td>{{ cliente.nome }}</td>
                             <td>{{ cliente.telefone }}</td>
                             <td>{{ cliente.cidade }}</td>
-                            <td>
-                                <a href="{{ url_for('deletar_cliente', codigo=cliente.codigo) }}" class="btn atender">Excluir</a>
-                            </td>
+                            <td><a href="{{ url_for('deletar_cliente', id=cliente.id) }}" class="btn atender">Excluir</a></td>
                         </tr>
                         {% endfor %}
                     </tbody>

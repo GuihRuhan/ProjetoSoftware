@@ -21,7 +21,7 @@
                         <tr>
                             <th>Nome</th>
                             <th>Idade</th>
-                            <th>Urgência</th>
+                             <th>Urgência</th>
                             <th>Convênio</th>
                             <th>Hora</th>
                         </tr>
@@ -29,16 +29,16 @@
                     <tbody>
                         {% for paciente in pacientes %}
                         <tr>
-                            <td>{{ paciente[1]['nome'] }}</td>
-                            <td>{{ paciente[1]['idade'] }}</td>
-                            <td>{{ paciente[1]['urgencia'] }}</td>
-                            <td>{{ paciente[1]['convenio'] }}</td>
-                            <td>{{ paciente[1]['hora'] }}</td>
+                            <td>{{ paciente.nome }}</td>
+                            <td>{{ paciente.idade }}</td>
+                            <td>{{ paciente.urgencia }}
+                            <td>{{ paciente.convenio }}</td>
+                            <td>{{ paciente.hora_chegada }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
-                <a href="{{ url_for('atender_paciente') }}" class="btn atender">Atender Próximo</a>
+                <a href="{{ url_for('atender') }}" class="btn atender">Atender Próximo</a>
             {% else %}
                 <p class="empty">Nenhum paciente na fila.</p>
             {% endif %}
